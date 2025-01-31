@@ -20,9 +20,16 @@ public class ExpenseService {
     public String saveExpense(Expense expense) throws ExecutionException, InterruptedException {
         Firestore firestoreDb = FirestoreClient.getFirestore();
 
-        ApiFuture<WriteResult> collectionApiFuture = firestoreDb.collection(COLLECTION_NAME).document(expense.getName()).set(expense);
+        String docId = firestoreDb.collection(COLLECTION_NAME).document().getId();
+        expense.setId(docId);
+
+        ApiFuture<WriteResult> collectionApiFuture = firestoreDb.collection(COLLECTION_NAME)
+                .document(expense.getName())
+                .set(expense);
+
         return collectionApiFuture.get().getUpdateTime().toString();
     }
+
     public List<Expense> getAllExpenses() throws ExecutionException, InterruptedException {
         Firestore firestoreDb = FirestoreClient.getFirestore();
         List<Expense> expenses = new ArrayList<>();

@@ -4,9 +4,18 @@ import com.google.cloud.Timestamp;
 
 
 public class Expense {
+    private String id;
     private String name;
     private double price;
     private String timestamp;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

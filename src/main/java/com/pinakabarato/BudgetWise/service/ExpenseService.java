@@ -1,10 +1,7 @@
 package com.pinakabarato.BudgetWise.service;
 
 import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.QueryDocumentSnapshot;
-import com.google.cloud.firestore.QuerySnapshot;
-import com.google.cloud.firestore.WriteResult;
+import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
 import com.pinakabarato.BudgetWise.entity.Expense;
 import org.springframework.stereotype.Service;
@@ -45,5 +42,21 @@ public class ExpenseService {
         }
 
         return expenses;
+    }
+
+    public Expense getExpenseById(String id) throws ExecutionException, InterruptedException {
+        Firestore firestoreDb = FirestoreClient.getFirestore();
+
+        ApiFuture<QuerySnapshot> future = firestoreDb.collection(COLLECTION_NAME)
+                .whereEqualTo("id", id)
+                .get();
+
+        List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+
+        if (documents.isEmpty()) {
+            throw new RuntimeException("Expense not found with id: " + id);
+        }
+
+        return documents.get(0).toObject(Expense.class);
     }
 }

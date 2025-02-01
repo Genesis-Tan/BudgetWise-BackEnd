@@ -25,4 +25,9 @@ public class ExpenseController {
     public List<Expense> getAllExpenses() throws ExecutionException, InterruptedException {
         return expenseService.getAllExpenses();
     }
+
+    @GetMapping("/expense/{id}")
+    public Expense getExpenseById(@PathVariable String id) throws ExecutionException, InterruptedException {
+        return expenseService.getExpenseById(id);
+    }
 }

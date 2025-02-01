@@ -30,4 +30,9 @@ public class ExpenseController {
     public Expense getExpenseById(@PathVariable String id) throws ExecutionException, InterruptedException {
         return expenseService.getExpenseById(id);
     }
+
+    @DeleteMapping("/expense/{id}")
+    public void deleteExpenseById(@PathVariable String id) throws ExecutionException, InterruptedException {
+        expenseService.deleteExpenseById(id);
+    }
 }

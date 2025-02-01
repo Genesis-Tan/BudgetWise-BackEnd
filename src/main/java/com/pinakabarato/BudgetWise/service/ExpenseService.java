@@ -5,6 +5,7 @@ import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
 import com.pinakabarato.BudgetWise.entity.Expense;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,5 +59,22 @@ public class ExpenseService {
         }
 
         return documents.get(0).toObject(Expense.class);
+    }
+
+    public void deleteExpenseById(String id) throws ExecutionException, InterruptedException {
+        Firestore firestoreDb = FirestoreClient.getFirestore();
+
+        ApiFuture<QuerySnapshot> future = firestoreDb.collection(COLLECTION_NAME)
+                .whereEqualTo("id", id)
+                .get();
+
+        List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+
+        if (documents.isEmpty()) {
+            throw new RuntimeException("Cannot delete - Expense not found with id: " + id);
+        }
+
+        DocumentReference docRef = documents.get(0).getReference();
+        docRef.delete().get();
     }
 }
